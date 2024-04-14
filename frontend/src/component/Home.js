@@ -272,23 +272,28 @@ const FilterPopup = (props) => {
             <Grid item xs={3}>
               Salary
             </Grid>
-            <Grid item xs={9}>
-              <Slider
-                valueLabelDisplay="auto"
-                valueLabelFormat={(value) => {
-                  return value * (100000 / 100);
-                }}
-                marks={[
-                  { value: 0, label: "0" },
-                  { value: 100, label: "100000" },
-                ]}
-                value={searchOptions.salary}
-                onChange={(event, value) =>
+            <Grid item xs={4}>
+              <TextField
+                label="Min"
+                value={searchOptions.salaryMin}
+                onChange={(event) => {
                   setSearchOptions({
                     ...searchOptions,
-                    salary: value,
-                  })
-                }
+                    salaryMin: event.target.value,
+                  });
+                }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Max"
+                value={searchOptions.salaryMax}
+                onChange={(event) => {
+                  setSearchOptions({
+                    ...searchOptions,
+                    salaryMax: event.target.value,
+                  });
+                }}
               />
             </Grid>
           </Grid>
@@ -605,7 +610,7 @@ const Home = (props) => {
       })
       .then((response) => {
         console.log(response.data);
-        setJobs(response.data)
+        setJobs(response.data);
         // setJobs(
         //   response.data.filter((obj) => {
         //     const today = new Date();
@@ -641,7 +646,12 @@ const Home = (props) => {
           alignItems="center"
         >
           <Grid item xs>
-            <Typography variant="h2" style={{color:"white",fontWeight:"bold"}}>Jobs</Typography>
+            <Typography
+              variant="h2"
+              style={{ color: "white", fontWeight: "bold" }}
+            >
+              Jobs
+            </Typography>
           </Grid>
           <Grid item xs>
             <TextField
@@ -652,7 +662,6 @@ const Home = (props) => {
                   ...searchOptions,
                   query: event.target.value,
                 })
-                
               }
               onKeyPress={(ev) => {
                 if (ev.key === "Enter") {
@@ -668,7 +677,11 @@ const Home = (props) => {
                   </InputAdornment>
                 ),
               }}
-              style={{ width: "500px",backgroundColor:"white",borderRadius:"12px" }}
+              style={{
+                width: "500px",
+                backgroundColor: "white",
+                borderRadius: "12px",
+              }}
               variant="outlined"
             />
           </Grid>
@@ -692,8 +705,17 @@ const Home = (props) => {
               return <JobTile job={job} />;
             })
           ) : (
-            <Typography variant="h5" style={{height:"50px", textAlign: "center",
-            background:"rgba(255,255,255,0.5)",marginLeft:"25%",marginRight:"25%",paddingTop:"15px" }}>
+            <Typography
+              variant="h5"
+              style={{
+                height: "50px",
+                textAlign: "center",
+                background: "rgba(255,255,255,0.5)",
+                marginLeft: "25%",
+                marginRight: "25%",
+                paddingTop: "15px",
+              }}
+            >
               No jobs found
             </Typography>
           )}
