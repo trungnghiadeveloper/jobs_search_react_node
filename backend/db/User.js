@@ -16,10 +16,9 @@ let schema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["recruiter", "applicant"],
+      enum: ["recruiter", "applicant", "admin"],
       required: true,
     },
-    
   },
   { collation: { locale: "en" } }
 );
@@ -60,4 +59,4 @@ schema.methods.login = function (password) {
   });
 };
 
-module.exports = mongoose.model("userauth", schema);
+module.exports = mongoose.model("userauths", schema);

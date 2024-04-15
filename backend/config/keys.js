@@ -1,4 +1,4 @@
-dbPassword='mongodb+srv://suhani1230:Suhani1230@cluster0.qcod3.mongodb.net/test?retryWrites=true&w=majority'
+dbPassword='mongodb+srv://ttndevfullstack:ttndevfullstack@cluster0.8plc8hu.mongodb.net/job_search_dev'
 
 module.exports = {
   mongoURI: dbPassword

@@ -321,7 +321,7 @@ router.delete("/jobs/:id", jwtAuth, (req, res) => {
 // get user's personal details
 router.get("/user", jwtAuth, (req, res) => {
   const user = req.user;
-  if (user.type === "recruiter") {
+  if (user.type === "recruiter" || user.type === "admin") {
     Recruiter.findOne({ userId: user._id })
       .then((recruiter) => {
         if (recruiter == null) {

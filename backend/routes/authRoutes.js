@@ -30,7 +30,7 @@ router.post("/signup", (req, res) => {
           password: data.password,
           type: data.type,
         });
-
+        
         user
           .save()
           .then(() => {
@@ -55,14 +55,16 @@ router.post("/signup", (req, res) => {
             userDetails
               .save()
               .then(() => {
-                // Token
-                const token = jwt.sign({ _id: user._id }, authKeys.jwtSecretKey);
+                  // Token
+                  const token = jwt.sign({ _id: user._id }, authKeys.jwtSecretKey);
+
                 res.json({
                   token: token,
                   type: user.type,
                 });
               })
               .catch((err) => {
+                console.log(err);
                 user
                   .delete()
                   .then(() => {
@@ -75,6 +77,7 @@ router.post("/signup", (req, res) => {
               });
           })
           .catch((err) => {
+            console.log(err);
             res.status(400).json(err);
           });
         }

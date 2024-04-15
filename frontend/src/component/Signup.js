@@ -1,30 +1,30 @@
-import { useState, useContext } from "react";
-import {Grid,TextField,Button,Typography,makeStyles,Paper,MenuItem,Input,} from "@material-ui/core";
-import axios from "axios";
-import { Redirect } from "react-router-dom";
-import ChipInput from "material-ui-chip-input";
-import DescriptionIcon from "@material-ui/icons/Description";
-import FaceIcon from "@material-ui/icons/Face";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/material.css";
+import { useState, useContext } from 'react';
+import { Grid, TextField, Button, Typography, makeStyles, Paper, MenuItem } from '@material-ui/core';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
+import ChipInput from 'material-ui-chip-input';
+import DescriptionIcon from '@material-ui/icons/Description';
+import FaceIcon from '@material-ui/icons/Face';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/material.css';
 
-import PasswordInput from "../lib/PasswordInput";
-import EmailInput from "../lib/EmailInput";
-import FileUploadInput from "../lib/FileUploadInput";
-import { SetPopupContext } from "../App";
+import PasswordInput from '../lib/PasswordInput';
+import EmailInput from '../lib/EmailInput';
+import FileUploadInput from '../lib/FileUploadInput';
+import { SetPopupContext } from '../App';
 
-import apiList from "../lib/apiList";
-import isAuth from "../lib/isAuth";
+import apiList from '../lib/apiList';
+import isAuth from '../lib/isAuth';
 
 const useStyles = makeStyles((theme) => ({
   body: {
-    padding: "60px 60px",
+    padding: '60px 60px',
   },
   inputBox: {
-    width: "400px",
+    width: '400px',
   },
   submitButton: {
-    width: "400px",
+    width: '400px',
   },
 }));
 
@@ -35,13 +35,7 @@ const MultifieldInput = (props) => {
   return (
     <>
       {education.map((obj, key) => (
-        <Grid
-          item
-          container
-          className={classes.inputBox}
-          key={key}
-          style={{ paddingLeft: 0, paddingRight: 0 }}
-        >
+        <Grid item container className={classes.inputBox} key={key} style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Grid item xs={6}>
             <TextField
               label={`Institution Name #${key + 1}`}
@@ -90,9 +84,9 @@ const MultifieldInput = (props) => {
             setEducation([
               ...education,
               {
-                institutionName: "",
-                startYear: "",
-                endYear: "",
+                institutionName: '',
+                startYear: '',
+                endYear: '',
               },
             ])
           }
@@ -112,25 +106,25 @@ const Signup = (props) => {
   const [loggedin, setLoggedin] = useState(isAuth());
 
   const [signupDetails, setSignupDetails] = useState({
-    type: "applicant",
-    email: "",
-    password: "",
-    name: "",
+    type: 'applicant',
+    email: '',
+    password: '',
+    name: '',
     education: [],
     skills: [],
-    resume: "",
-    profile: "",
-    bio: "",
-    contactNumber: "",
+    resume: '',
+    profile: '',
+    bio: '',
+    contactNumber: '',
   });
 
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState('');
 
   const [education, setEducation] = useState([
     {
-      institutionName: "",
-      startYear: "",
-      endYear: "",
+      institutionName: '',
+      startYear: '',
+      endYear: '',
     },
   ]);
 
@@ -139,19 +133,19 @@ const Signup = (props) => {
       untouched: true,
       required: true,
       error: false,
-      message: "",
+      message: '',
     },
     password: {
       untouched: true,
       required: true,
       error: false,
-      message: "",
+      message: '',
     },
     name: {
       untouched: true,
       required: true,
       error: false,
-      message: "",
+      message: '',
     },
   });
 
@@ -194,10 +188,10 @@ const Signup = (props) => {
     let updatedDetails = {
       ...signupDetails,
       education: education
-        .filter((obj) => obj.institutionName.trim() !== "")
+        .filter((obj) => obj.institutionName.trim() !== '')
         .map((obj) => {
-          if (obj["endYear"] === "") {
-            delete obj["endYear"];
+          if (obj['endYear'] === '') {
+            delete obj['endYear'];
           }
           return obj;
         }),
@@ -213,20 +207,20 @@ const Signup = (props) => {
       axios
         .post(apiList.signup, updatedDetails)
         .then((response) => {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("type", response.data.type);
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('type', response.data.type);
           setLoggedin(isAuth());
           setPopup({
             open: true,
-            severity: "success",
-            message: "Logged in successfully",
+            severity: 'success',
+            message: 'Logged in successfully',
           });
           console.log(response);
         })
         .catch((err) => {
           setPopup({
             open: true,
-            severity: "error",
+            severity: 'error',
             message: err.response.data.message,
           });
           console.log(err.response);
@@ -235,8 +229,8 @@ const Signup = (props) => {
       setInputErrorHandler(tmpErrorHandler);
       setPopup({
         open: true,
-        severity: "error",
-        message: "Incorrect Input",
+        severity: 'error',
+        message: 'Incorrect Input',
       });
     }
   };
@@ -259,7 +253,7 @@ const Signup = (props) => {
     let updatedDetails = {
       ...signupDetails,
     };
-    if (phone !== "") {
+    if (phone !== '') {
       updatedDetails = {
         ...signupDetails,
         contactNumber: `+${phone}`,
@@ -267,7 +261,7 @@ const Signup = (props) => {
     } else {
       updatedDetails = {
         ...signupDetails,
-        contactNumber: "",
+        contactNumber: '',
       };
     }
 
@@ -283,20 +277,20 @@ const Signup = (props) => {
       axios
         .post(apiList.signup, updatedDetails)
         .then((response) => {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("type", response.data.type);
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('type', response.data.type);
           setLoggedin(isAuth());
           setPopup({
             open: true,
-            severity: "success",
-            message: "Logged in successfully",
+            severity: 'success',
+            message: 'Logged in successfully',
           });
           console.log(response);
         })
         .catch((err) => {
           setPopup({
             open: true,
-            severity: "error",
+            severity: 'error',
             message: err.response.data.message,
           });
           console.log(err.response);
@@ -305,8 +299,8 @@ const Signup = (props) => {
       setInputErrorHandler(tmpErrorHandler);
       setPopup({
         open: true,
-        severity: "error",
-        message: "Incorrect Input",
+        severity: 'error',
+        message: 'Incorrect Input',
       });
     }
   };
@@ -314,10 +308,10 @@ const Signup = (props) => {
   return loggedin ? (
     <Redirect to="/" />
   ) : (
-    <Paper elevation={3} className={classes.body}>
+    <Paper elevation={3} className={classes.body} style={{ minWidth: "500px" }}>
       <Grid container direction="column" spacing={4} alignItems="center">
         <Grid item>
-          <Typography variant="h3" component="h2" style={{color:"#3f51b5",fontWeight:"bold"}}>
+          <Typography variant="h3" component="h2" style={{ color: '#3f51b5', fontWeight: 'bold' }}>
             Sign up
           </Typography>
         </Grid>
@@ -329,7 +323,7 @@ const Signup = (props) => {
             className={classes.inputBox}
             value={signupDetails.type}
             onChange={(event) => {
-              handleInput("type", event.target.value);
+              handleInput('type', event.target.value);
             }}
           >
             <MenuItem value="applicant">Applicant</MenuItem>
@@ -340,15 +334,15 @@ const Signup = (props) => {
           <TextField
             label="Name"
             value={signupDetails.name}
-            onChange={(event) => handleInput("name", event.target.value)}
+            onChange={(event) => handleInput('name', event.target.value)}
             className={classes.inputBox}
             error={inputErrorHandler.name.error}
             helperText={inputErrorHandler.name.message}
             onBlur={(event) => {
-              if (event.target.value === "") {
-                handleInputError("name", true, "Name is required");
+              if (event.target.value === '') {
+                handleInputError('name', true, 'Name is required');
               } else {
-                handleInputError("name", false, "");
+                handleInputError('name', false, '');
               }
             }}
             variant="outlined"
@@ -358,7 +352,7 @@ const Signup = (props) => {
           <EmailInput
             label="Email"
             value={signupDetails.email}
-            onChange={(event) => handleInput("email", event.target.value)}
+            onChange={(event) => handleInput('email', event.target.value)}
             inputErrorHandler={inputErrorHandler}
             handleInputError={handleInputError}
             className={classes.inputBox}
@@ -369,34 +363,29 @@ const Signup = (props) => {
           <PasswordInput
             label="Password"
             value={signupDetails.password}
-            onChange={(event) => handleInput("password", event.target.value)}
+            onChange={(event) => handleInput('password', event.target.value)}
             className={classes.inputBox}
             error={inputErrorHandler.password.error}
             helperText={inputErrorHandler.password.message}
             onBlur={(event) => {
-              if (event.target.value === "") {
-                handleInputError("password", true, "Password is required");
+              if (event.target.value === '') {
+                handleInputError('password', true, 'Password is required');
               } else {
-                handleInputError("password", false, "");
+                handleInputError('password', false, '');
               }
             }}
           />
         </Grid>
-        {signupDetails.type === "applicant" ? (
+        {signupDetails.type === 'applicant' ? (
           <>
-            <MultifieldInput
-              education={education}
-              setEducation={setEducation}
-            />
+            <MultifieldInput education={education} setEducation={setEducation} />
             <Grid item>
               <ChipInput
                 className={classes.inputBox}
                 label="Skills"
                 variant="outlined"
                 helperText="Press enter to add skills"
-                onChange={(chips) =>
-                  setSignupDetails({ ...signupDetails, skills: chips })
-                }
+                onChange={(chips) => setSignupDetails({ ...signupDetails, skills: chips })}
               />
             </Grid>
             <Grid item>
@@ -413,7 +402,7 @@ const Signup = (props) => {
                 // }
                 uploadTo={apiList.uploadResume}
                 handleInput={handleInput}
-                identifier={"resume"}
+                identifier={'resume'}
               />
             </Grid>
             <Grid item>
@@ -430,37 +419,33 @@ const Signup = (props) => {
                 // }
                 uploadTo={apiList.uploadProfileImage}
                 handleInput={handleInput}
-                identifier={"profile"}
+                identifier={'profile'}
               />
             </Grid>
           </>
         ) : (
           <>
-            <Grid item style={{ width: "100%" }}>
+            <Grid item style={{ width: '100%' }}>
               <TextField
                 label="Bio (upto 250 words)"
                 multiline
                 rows={8}
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 variant="outlined"
                 value={signupDetails.bio}
                 onChange={(event) => {
                   if (
-                    event.target.value.split(" ").filter(function (n) {
-                      return n != "";
+                    event.target.value.split(' ').filter(function (n) {
+                      return n != '';
                     }).length <= 250
                   ) {
-                    handleInput("bio", event.target.value);
+                    handleInput('bio', event.target.value);
                   }
                 }}
               />
             </Grid>
             <Grid item>
-              <PhoneInput
-                country={"in"}
-                value={phone}
-                onChange={(phone) => setPhone(phone)}
-              />
+              <PhoneInput country={'in'} value={phone} onChange={(phone) => setPhone(phone)} />
             </Grid>
           </>
         )}
@@ -470,16 +455,13 @@ const Signup = (props) => {
             variant="contained"
             color="primary"
             onClick={() => {
-              signupDetails.type === "applicant"
-                ? handleLogin()
-                : handleLoginRecruiter();
+              signupDetails.type === 'applicant' ? handleLogin() : handleLoginRecruiter();
             }}
             className={classes.submitButton}
-            style={{borderRadius:"8px",width:"130px",height:"50px"}}
+            style={{ borderRadius: '8px', width: '130px', height: '50px' }}
           >
             Signup
           </Button>
-          
         </Grid>
       </Grid>
     </Paper>
@@ -487,5 +469,3 @@ const Signup = (props) => {
 };
 
 export default Signup;
-
-
