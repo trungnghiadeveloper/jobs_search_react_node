@@ -3,7 +3,6 @@ import {
   Button,
   Grid,
   Typography,
-  Modal,
   Paper,
   makeStyles,
   TextField,
@@ -16,8 +15,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import FaceIcon from "@material-ui/icons/Face";
 
 import { SetPopupContext } from "../App";
-
-import apiList, {server} from "../lib/apiList";
+import apiList from "../lib/apiList";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -112,8 +110,7 @@ const MultifieldInput = (props) => {
 const Profile = (props) => {
   const classes = useStyles();
   const setPopup = useContext(SetPopupContext);
-  const [userData, setUserData] = useState();
-  const [open, setOpen] = useState(false);
+//   const [open, setOpen] = useState(false);
 
   const [profileDetails, setProfileDetails] = useState({
     name: "",
@@ -140,6 +137,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     getData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getData = () => {
@@ -209,13 +207,13 @@ const Profile = (props) => {
   }
 
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+//   const handleClose = () => {
+//     setOpen(false);
+//   };
 
-  const editDetails = () => {
-    setOpen(true);
-  };
+//   const editDetails = () => {
+//     setOpen(true);
+//   };
 
   const handleUpdate = () => {
     console.log(education);
@@ -254,7 +252,7 @@ const Profile = (props) => {
         });
         console.log(err.response);
       });
-    setOpen(false);
+    // setOpen(false);
   };
   
   return (

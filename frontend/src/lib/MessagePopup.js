@@ -9,7 +9,7 @@ const MessagePopup = (props) => {
     props.setOpen(false);
   };
   return (
-    <Snackbar open={props.open} onClose={handleClose} autoHideDuration={2000}>
+    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={props.open} onClose={handleClose} autoHideDuration={2000}>
       <Alert onClose={handleClose} severity={props.severity}>
         {props.message}
       </Alert>

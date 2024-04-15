@@ -30,13 +30,13 @@ const Navbar = (props) => {
     <AppBar position="fixed" background= "transparent">
       <Toolbar style={{minHeight: "80px"}}>
         <Typography variant="h6" className={classes.title} style={{fontSize: "32px",fontWeight: "800"}}>
-        <img src="https://www.linkpicture.com/q/job-search.png" width="30px" height="auto"></img>JOB O HUNT 
+        {/* <img src="https://t3.ftcdn.net/jpg/05/61/04/54/240_F_561045496_xfpWwmTnI1xuTA8BPC8QJS867mgXo4RR.jpg" alt="Navbar" width="30px" height="auto"></img> */}
+        JOB SEARCH
         </Typography>
         <div style={{marginTop:"20px"}}>
         {isAuth() ? (
           userType() === "recruiter" ? (
             <>
-              
               <Button color="inherit" onClick={() => handleClick("/home")}>
               <Typography style={{fontSize:"18px"}}>Home</Typography>
               </Button>
