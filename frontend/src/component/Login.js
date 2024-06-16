@@ -1,25 +1,24 @@
-import '../index.css';
-import axios from 'axios';
-import apiList from '../lib/apiList';
-import isAuth from '../lib/isAuth';
-import PasswordInput from '../lib/PasswordInput';
-import EmailInput from '../lib/EmailInput';
+import "../index.css";
+import axios from "axios";
+import apiList from "../lib/apiList";
+import isAuth from "../lib/isAuth";
+import PasswordInput from "../lib/PasswordInput";
+import EmailInput from "../lib/EmailInput";
 
-import { useContext, useState } from 'react';
-import { Grid, Button, Typography, makeStyles, Paper } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
-import { SetPopupContext } from '../App';
-
+import { useContext, useState } from "react";
+import { Grid, Button, Typography, makeStyles, Paper } from "@material-ui/core";
+import { Redirect } from "react-router-dom";
+import { SetPopupContext } from "../App";
 
 const useStyles = makeStyles((theme) => ({
   body: {
-    padding: '60px 60px',
+    padding: "60px 60px",
   },
   inputBox: {
-    width: '300px',
+    width: "300px",
   },
   submitButton: {
-    width: '300px',
+    width: "300px",
   },
 }));
 
@@ -30,18 +29,18 @@ const Login = (props) => {
   const [loggedin, setLoggedin] = useState(isAuth());
 
   const [loginDetails, setLoginDetails] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [inputErrorHandler, setInputErrorHandler] = useState({
     email: {
       error: false,
-      message: '',
+      message: "",
     },
     password: {
       error: false,
-      message: '',
+      message: "",
     },
   });
 
@@ -70,20 +69,20 @@ const Login = (props) => {
       axios
         .post(apiList.login, loginDetails)
         .then((response) => {
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('type', response.data.type);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("type", response.data.type);
           setLoggedin(isAuth());
           setPopup({
             open: true,
-            severity: 'success',
-            message: 'Logged in successfully',
+            severity: "success",
+            message: "Logged in successfully",
           });
           console.log(response);
         })
         .catch((err) => {
           setPopup({
             open: true,
-            severity: 'error',
+            severity: "error",
             message: err.response.data.message,
           });
           console.log(err.response);
@@ -91,8 +90,8 @@ const Login = (props) => {
     } else {
       setPopup({
         open: true,
-        severity: 'error',
-        message: 'Incorrect Input',
+        severity: "error",
+        message: "Incorrect Input",
       });
     }
   };
@@ -100,14 +99,23 @@ const Login = (props) => {
   return loggedin ? (
     <Redirect to="/" />
   ) : (
-    <Grid container direction="row" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-      {/* <div style={{ alignItems: 'center' }}>
-        <img src={img} alt='login' width="400px" height="450px"></img>
-      </div> */}
+    <Grid
+      container
+      direction="row"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Paper elevation={3} className={classes.body}>
         <Grid container direction="column" spacing={4} alignItems="center">
           <Grid item>
-            <Typography variant="h3" component="h2" style={{ color: '#3f51b5', fontWeight: 'bold' }}>
+            <Typography
+              variant="h3"
+              component="h2"
+              style={{ color: "#3f51b5", fontWeight: "bold" }}
+            >
               Welcome back, Login!
             </Typography>
           </Grid>
@@ -116,7 +124,7 @@ const Login = (props) => {
             <EmailInput
               label="Email"
               value={loginDetails.email}
-              onChange={(event) => handleInput('email', event.target.value)}
+              onChange={(event) => handleInput("email", event.target.value)}
               inputErrorHandler={inputErrorHandler}
               handleInputError={handleInputError}
               className={classes.inputBox}
@@ -126,7 +134,7 @@ const Login = (props) => {
             <PasswordInput
               label="Password"
               value={loginDetails.password}
-              onChange={(event) => handleInput('password', event.target.value)}
+              onChange={(event) => handleInput("password", event.target.value)}
               className={classes.inputBox}
             />
           </Grid>
@@ -136,7 +144,7 @@ const Login = (props) => {
               color="primary"
               onClick={() => handleLogin()}
               className={classes.submitButton}
-              style={{ borderRadius: '8px', width: '130px', height: '50px' }}
+              style={{ borderRadius: "8px", width: "130px", height: "50px" }}
             >
               Login
             </Button>
