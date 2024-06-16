@@ -19,9 +19,12 @@ let schema = new mongoose.Schema(
       enum: ["recruiter", "applicant"],
       required: true,
     },
-    
+    accountBalance: {
+      type: Number,
+      default: 0,
+    },
   },
-  { collation: { locale: "en" } }
+  { collation: { locale: "en" } },
 );
 
 // Password hashing

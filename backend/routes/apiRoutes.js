@@ -8,8 +8,10 @@ const Recruiter = require("../db/Recruiter");
 const Job = require("../db/Job");
 const Application = require("../db/Application");
 const Rating = require("../db/Rating");
+const TransactionHistory = require("../db/TransactionHistory");
+const { generateCode } = require("../utils/helper");
 
-//The express.Router() function is used to create a new router object. 
+//The express.Router() function is used to create a new router object.
 //This function is used when you want to create a new router object in your program to handle requests.
 const router = express.Router();
 
@@ -18,8 +20,8 @@ router.post("/jobs", jwtAuth, (req, res) => {
   const user = req.user;
 
   if (user.type != "recruiter") {
-    // applicant trying to add new job 
-    // not authorised 
+    // applicant trying to add new job
+    // not authorised
     res.status(401).json({
       message: "You don't have permissions to add jobs",
     });
@@ -48,12 +50,11 @@ router.post("/jobs", jwtAuth, (req, res) => {
       res.json({ message: "Job added successfully to the database" });
     })
     .catch((err) => {
-      //Whenever any user sends an invalid request to the server, 
+      //Whenever any user sends an invalid request to the server,
       //the server immediately reports it and generates an HTTP based 400 bad request error.
       res.status(400).json(err);
     });
 });
-
 
 // to get all the jobs [pagination] [for recruiter personal and for everyone]
 router.get("/jobs", jwtAuth, (req, res) => {
@@ -61,7 +62,6 @@ router.get("/jobs", jwtAuth, (req, res) => {
 
   let findParams = {};
   let sortParams = {};
-
 
   // to list down jobs posted by a particular recruiter
   if (user.type === "recruiter" && req.query.myjobs) {
@@ -476,7 +476,6 @@ router.put("/user", jwtAuth, (req, res) => {
   }
 });
 
-
 // apply for a job [todo: test: done]
 router.post("/jobs/:id/applications", jwtAuth, (req, res) => {
   const user = req.user;
@@ -767,7 +766,7 @@ router.put("/applications/:id", jwtAuth, (req, res) => {
                           status: "cancelled",
                         },
                       },
-                      { multi: true }
+                      { multi: true },
                     )
                       .then(() => {
                         if (status === "accepted") {
@@ -780,7 +779,7 @@ router.put("/applications/:id", jwtAuth, (req, res) => {
                               $set: {
                                 acceptedCandidates: activeApplicationCount + 1,
                               },
-                            }
+                            },
                           )
                             .then(() => {
                               res.json({
@@ -827,7 +826,7 @@ router.put("/applications/:id", jwtAuth, (req, res) => {
           $set: {
             status: status,
           },
-        }
+        },
       )
         .then((application) => {
           if (application === null) {
@@ -863,7 +862,7 @@ router.put("/applications/:id", jwtAuth, (req, res) => {
           $set: {
             status: status,
           },
-        }
+        },
       )
         .then((tmp) => {
           console.log(tmp);
@@ -1034,7 +1033,9 @@ router.put("/rating", jwtAuth, (req, res) => {
                       {
                         $group: {
                           _id: {},
-                          average: { $avg: "$rating" },
+                          average: {
+                            $avg: "$rating",
+                          },
                         },
                       },
                     ])
@@ -1056,7 +1057,7 @@ router.put("/rating", jwtAuth, (req, res) => {
                             $set: {
                               rating: avg,
                             },
-                          }
+                          },
                         )
                           .then((applicant) => {
                             if (applicant === null) {
@@ -1129,7 +1130,7 @@ router.put("/rating", jwtAuth, (req, res) => {
                       $set: {
                         rating: avg,
                       },
-                    }
+                    },
                   )
                     .then((applicant) => {
                       if (applicant === null) {
@@ -1204,7 +1205,9 @@ router.put("/rating", jwtAuth, (req, res) => {
                       {
                         $group: {
                           _id: {},
-                          average: { $avg: "$rating" },
+                          average: {
+                            $avg: "$rating",
+                          },
                         },
                       },
                     ])
@@ -1224,7 +1227,7 @@ router.put("/rating", jwtAuth, (req, res) => {
                             $set: {
                               rating: avg,
                             },
-                          }
+                          },
                         )
                           .then((foundJob) => {
                             if (foundJob === null) {
@@ -1299,7 +1302,7 @@ router.put("/rating", jwtAuth, (req, res) => {
                       $set: {
                         rating: avg,
                       },
-                    }
+                    },
                   )
                     .then((foundJob) => {
                       if (foundJob === null) {
@@ -1351,5 +1354,117 @@ router.get("/rating", jwtAuth, (req, res) => {
   });
 });
 
+// ----------------------------------
 
+// create transaction history
+router.post("/transaction-history", jwtAuth, async (req, res, next) => {
+  try {
+    const auth = req.user;
+    const { price } = req.body;
+    const code = generateCode();
+
+    const transactionHistory = await TransactionHistory.create({
+      user: auth._id,
+      price: price,
+      code: code,
+    });
+
+    const money = (price / 2) * 1000;
+    const objectIdString = transactionHistory._id.toString();
+    const lastSixChars = objectIdString.slice(-6);
+    const content = `JI${lastSixChars}${code}JO`;
+    return res.json({
+      image: `https://api.vieqr.com/vietqr/Vietcombank/1019943784/${money}/compact2.jpg?NDck=${content}&FullName=TRINH%20VU%20XUAN%20SON`,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get transaction history
+router.get(
+  "/admin/transaction-history/:content",
+  jwtAuth,
+  async (req, res, next) => {
+    try {
+      const auth = req.user;
+
+      //   if (auth.type !== "admin") {
+      //     return res.sendStatus(404);
+      //   }
+
+      const content = req.params.content;
+      console.log(content);
+      const regex = /JI(.*?)JO/;
+
+      const matchResult = content.match(regex);
+
+      if (!matchResult) {
+        return res.status(400).json({
+          message: "error: content not match",
+        });
+      }
+
+      // Nếu có khớp, phần tử thứ hai trong mảng (index 1) sẽ chứa nội dung cần lấy
+      const extractedContent = matchResult[1].trim();
+      const transactionId = extractedContent.slice(0, 6);
+
+      // Lấy các số còn lại sau 6 ký tự đầu tiên
+      const transactionCode = extractedContent.slice(6);
+
+      const transactions = await TransactionHistory.find({
+        code: transactionCode,
+      });
+
+      const transactionsResult = transactions.filter((doc) =>
+        doc._id.toString().endsWith(transactionId),
+      );
+
+      return res.json(transactionsResult);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// checked transaction history
+router.put(
+  "/admin/transaction-history/:id/checked",
+  jwtAuth,
+  async (req, res, next) => {
+    try {
+      const auth = req.user;
+      const transactionId = req.params.id;
+
+      const transaction = await TransactionHistory.findByIdAndUpdate(
+        transactionId,
+        {
+          check: true,
+        },
+        {
+          new: true,
+        },
+      );
+
+      const user = await User.findById(transaction.user._id);
+
+      await User.updateOne(
+        {
+          _id: user._id,
+        },
+        {
+          accountBalance: user.accountBalance + transaction.price,
+        },
+      );
+
+      return res.json({
+        message: "checked transaction success",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// ----------------------------------
 module.exports = router;

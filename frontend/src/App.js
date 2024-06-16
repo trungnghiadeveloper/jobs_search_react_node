@@ -10,6 +10,7 @@ import Signup from "./component/Signup";
 import Home from "./component/Home";
 import Applications from "./component/Applications";
 import Profile from "./component/Profile";
+import Recharge from "./component/Recharge";
 import CreateJobs from "./component/recruiter/CreateJobs";
 import MyJobs from "./component/recruiter/MyJobs";
 import JobApplications from "./component/recruiter/JobApplications";
@@ -18,8 +19,7 @@ import RecruiterProfile from "./component/recruiter/Profile";
 import MessagePopup from "./lib/MessagePopup";
 import isAuth, { userType } from "./lib/isAuth";
 
-const useStyles = makeStyles(
-  (theme) => ({
+const useStyles = makeStyles((theme) => ({
   body: {
     display: "flex",
     flexDirection: "column",
@@ -33,7 +33,7 @@ const useStyles = makeStyles(
 }));
 
 export const SetPopupContext = createContext();
-const TITLE ="Job-o-Hunt"
+const TITLE = "Job-o-Hunt";
 
 function App() {
   const classes = useStyles();
@@ -45,9 +45,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      
       <SetPopupContext.Provider value={setPopup}>
-      
         <Grid container direction="column">
           <Grid item xs>
             <Navbar />
@@ -72,7 +70,12 @@ function App() {
               <Route exact path="/applications">
                 <Applications />
               </Route>
-             
+
+              {/* Function Recharge */}
+              <Route exact path="/recharge">
+                <Recharge />
+              </Route>
+
               <Route exact path="/profile">
                 {userType() === "recruiter" ? (
                   <RecruiterProfile />
